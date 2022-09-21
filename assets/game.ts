@@ -1,5 +1,5 @@
-import { _decorator, Component, Node, Prefab, UITransform, instantiate, Event, EventTouch, input, Input, Vec3 } from 'cc';
-import { Cell } from './cell';
+import { _decorator, Component, Node, Prefab, UITransform, instantiate, Event, EventTouch, input, Input, Vec3, Layout } from 'cc';
+import { Cell } from './Cell';
 const { ccclass, property } = _decorator;
 
 @ccclass('game')
@@ -22,10 +22,12 @@ export class game extends Component {
     onLoad() {
         // 读取cell prefab的宽度
         this.cellPrefab.data.getComponent(UITransform).setContentSize(this.cellSize, this.cellSize)
-        // 根据行列数量，然后自适应修改宽高
-        const transform = this.node.getComponent(UITransform)
-        transform.height = this.rowCnt * this.cellSize
-        transform.width = this.columnCnt * this.cellSize
+        // 根据行列数量、细胞尺寸、layout间距，自适应修改宽高
+        const layout = this.node.getComponent(Layout)
+        this.node.getComponent(UITransform).setContentSize(
+            this.cellSize * this.columnCnt + (this.columnCnt - 1) * layout.spacingX,
+            this.cellSize * this.rowCnt + (this.rowCnt - 1) * layout.spacingY
+        )
 
         const startTime = Date.now()
         // 生成所有细胞
@@ -35,7 +37,7 @@ export class game extends Component {
             for (let col = 0; col < this.columnCnt; col++) {
                 const cellNode = instantiate(this.cellPrefab)
                 // console.log(this.cells)
-                cellNode.setPosition(col * this.cellSize, row * this.cellSize)
+                // cellNode.setPosition(col * this.cellSize, row * this.cellSize)
                 cellNode.setParent(this.node)
                 // 二维数组中第二行赋值不能直接赋，参考https://wenku.baidu.com/view/fa07293b5aeef8c75fbfc77da26925c52cc591da.html
                 this.cellNodes[row][col] = cellNode

@@ -1,16 +1,8 @@
 import { _decorator, Component, Node, Sprite, color, Color, ValueType, Input, EventTouch } from 'cc';
 const { ccclass, property } = _decorator;
 
-// enum STATE_TYPE {
-//     DEAD,
-//     ALIVE,
-// }
-
-@ccclass('cell')
+@ccclass('Cell')
 export class Cell extends Component {
-    @property(Node)
-    public colorNode: Node = null
-
     private _isAlive: boolean = false
     public get isAlive() {
         return this._isAlive
@@ -19,10 +11,10 @@ export class Cell extends Component {
         this._isAlive = value
         if (this.isAlive) {
             // 存活的细胞设置成黑色
-            this.colorNode.getComponent(Sprite).color = new Color(0, 0, 0)
+            this.node.getComponent(Sprite).color = new Color(0, 0, 0)
         } else {
             // 死亡的细胞设置成白色
-            this.colorNode.getComponent(Sprite).color = new Color(255, 255, 255)
+            this.node.getComponent(Sprite).color = new Color(255, 255, 255)
         }
     }
 
@@ -36,7 +28,6 @@ export class Cell extends Component {
 
     switchState(): void {
         this.isAlive = !this.isAlive
-        // this.setState(this.isAlive)
     }
 }
 
